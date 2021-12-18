@@ -1,43 +1,54 @@
 package com.hemebiotech.analytics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
+/**
+ * describe symptoms and count their occurrences
+ * 
+ * @author m700
+ *
+ */
 public class AnalyticsCounter {
-	private static int headacheCount = 0;	// initialize to 0
-	private static int rashCount = 0;		// initialize to 0
-	private static int pupilCount = 0;		// initialize to 0
-	
-	public static void main(String args[]) throws Exception {
-		// first get input
-		BufferedReader reader = new BufferedReader (new FileReader("symptoms.txt"));
-		String line = reader.readLine();
 
-		int i = 0;	// set i to 0
-		int headCount = 0;	// counts headaches
-		while (line != null) {
-			i++;	// increment i
-			System.out.println("symptom from file: " + line);
-			if (line.equals("headache")) {
-				headCount++;
-				System.out.println("number of headaches: " + headCount);
-			}
-			else if (line.equals("rush")) {
-				rashCount++;
-			}
-			else if (line.contains("pupils")) {
-				pupilCount++;
-			}
+	private static final String PATH_INPUT_FILE = "Project02Eclipse\\symptoms.txt";
+	private static final String PATH_RESULT_FILE = "Project02Eclipse\\result.out";
 
-			line = reader.readLine();	// get another symptom
+	public static void main(String[] args) throws Exception {
+
+		// create an ordered list from symptoms.txt file and read all lines.
+		ReadSymptomDataFromFile reader = new ReadSymptomDataFromFile(PATH_INPUT_FILE);
+		List<String> symptoms = reader.getSymptoms();
+
+		// count symptoms occurrences and ordered them into a list
+		TreeMap<String, Long> orderedCount = new TreeMap<>();
+		occurrenceCount(symptoms, orderedCount);
+
+		// each symptom with number of occurrences in an ordered list
+		List<String> finalLines = new ArrayList<>();
+		for (String key : orderedCount.keySet()) {
+			finalLines.add(key + ": " + orderedCount.get(key));
 		}
-		
-		// next generate output
-		FileWriter writer = new FileWriter ("result.out");
-		writer.write("headache: " + headacheCount + "\n");
-		writer.write("rash: " + rashCount + "\n");
-		writer.write("dialated pupils: " + pupilCount + "\n");
-		writer.close();
+
+		// then generate a new file
+		OccurrenceWriter write = new OccurrenceWriter(PATH_RESULT_FILE, finalLines);
+		write.writer();
+	}
+
+	/**
+	 * count symptoms occurrences in this method.
+	 * 
+	 * @param symptoms     = List of symptoms
+	 * @param orderedCount = Count occurrences and ordered them
+	 */
+	private static void occurrenceCount(List<String> symptoms, TreeMap<String, Long> orderedCount) {
+		for (String line : symptoms) {
+			if (orderedCount.containsKey(line)) {
+				orderedCount.put(line, orderedCount.get(line) + 1);
+			} else {
+				orderedCount.put(line, (long) 1L);
+			}
+		}
 	}
 }
