@@ -1,5 +1,6 @@
 package com.hemebiotech.analytics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -12,6 +13,7 @@ import java.util.TreeMap;
 public class AnalyticsCounter {
 
 	private static final String PATH_INPUT_FILE = "Project02Eclipse\\symptoms.txt";
+	private static final String PATH_RESULT_FILE = "Project02Eclipse\\result.out";
 
 	public static void main(String[] args) throws Exception {
 
@@ -23,6 +25,15 @@ public class AnalyticsCounter {
 		TreeMap<String, Long> orderedCount = new TreeMap<>();
 		occurrenceCount(symptoms, orderedCount);
 
+		// each symptom with number of occurrences in an ordered list
+		List<String> finalLines = new ArrayList<>();
+		for (String key : orderedCount.keySet()) {
+			finalLines.add(key + ": " + orderedCount.get(key));
+		}
+
+		// then generate a new file
+		OccurrenceWriter write = new OccurrenceWriter(PATH_RESULT_FILE, finalLines);
+		write.writer();
 	}
 
 	/**
@@ -41,4 +52,3 @@ public class AnalyticsCounter {
 		}
 	}
 }
-
