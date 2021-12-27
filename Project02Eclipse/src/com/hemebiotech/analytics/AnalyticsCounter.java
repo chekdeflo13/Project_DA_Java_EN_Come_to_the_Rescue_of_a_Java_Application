@@ -15,7 +15,7 @@ public class AnalyticsCounter {
 	private static final String PATH_INPUT_FILE = "Project02Eclipse\\symptoms.txt";
 	private static final String PATH_RESULT_FILE = "Project02Eclipse\\result.out";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
 		// create an ordered list from symptoms.txt file and read all lines.
 		ReadSymptomDataFromFile reader = new ReadSymptomDataFromFile(PATH_INPUT_FILE);
@@ -47,7 +47,7 @@ public class AnalyticsCounter {
 			if (orderedCount.containsKey(line)) {
 				orderedCount.put(line, orderedCount.get(line) + 1);
 			} else {
-				orderedCount.put(line, (long) 1L);
+				orderedCount.put(line, 1L);
 			}
 		}
 	}
